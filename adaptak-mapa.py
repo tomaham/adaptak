@@ -72,7 +72,7 @@ for id, row in df_filtered.iterrows():
         popup += "<div>"+ "<p>".join(sequence) +"</div>"
         #popup += "<div>"+ notes +"</div>"
         if 'http' in row['URL']:
-            popup += "<p><a ' href='"+row['URL']+"' title='Web podniku'>WWW</a>"
+            popup += "<p><a target='_' href='"+row['URL']+"' title='Web podniku'>WWW</a>"
         popup += "&nbsp;&nbsp;&nbsp;<a target='_' title='Na Mapy.cz' href='" + row['Mapa'] + "'> <img width='15' height='15' src='https://mapy.cz/img/favicon/ms-icon-144x144.png?2.65.5'> </a></p>"
         popup += "</div>"
 

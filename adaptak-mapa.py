@@ -85,7 +85,7 @@ for id, row in df_filtered.iterrows():
         marker = folium.Marker(
             location=[row['lat'], row['lon']],
             popup=folium.Popup(popup,max_width=300),
-            icon=folium.Icon(color=color, icon='utensils', prefix='fa'),
+            icon=folium.Icon(color=color, icon=row['Icon'], prefix='fa'),
             tooltip="Klikněte pro další info"
         ).add_to(m)
         # st.write(row['lat'],row['lon'])

@@ -61,12 +61,16 @@ for id, row in df_filtered.iterrows():
     if row['lon'] != 0:
         # st.write(row['podniky'],row['yy'],row['xx'])
 
-        notes = "<p>".join(gdf[gdf['podniky'] == row['podniky']]['poznámka'].tolist())
+        notes = gdf[gdf['podniky'] == row['podniky']]['poznámka'].tolist()
+        people = gdf[gdf['podniky'] == row['podniky']]['zaměstnanci'].tolist()
 
+        np = zip(notes, people)
+        sequence = [x[0]+"<br>"+x[1] for x in np]
 
         popup = "<div><b>" + row['podniky'] + "</b>"
         popup += "<p><em>"+ row['Tagy'] +"</em></p>"
-        popup += "<div>"+ notes +"</div>"
+        popup += "<div>"+ "<p>".join(sequence) +"</div>"
+        #popup += "<div>"+ notes +"</div>"
         if 'http' in row['URL']:
             popup += "<p><a ' href='"+row['URL']+"' title='Web podniku'>WWW</a>"
         popup += "&nbsp;&nbsp;&nbsp;<a target='_' title='Na Mapy.cz' href='" + row['Mapa'] + "'> <img width='15' height='15' src='https://mapy.cz/img/favicon/ms-icon-144x144.png?2.65.5'> </a></p>"
@@ -80,8 +84,8 @@ for id, row in df_filtered.iterrows():
 
         marker = folium.Marker(
             location=[row['lat'], row['lon']],
-            popup=popup,
-            icon=folium.Icon(color=color),
+            popup=folium.Popup(popup,max_width=300),
+            icon=folium.Icon(color=color, icon='utensils', prefix='fa'),
             tooltip="Klikněte pro další info"
         ).add_to(m)
         # st.write(row['lat'],row['lon'])

@@ -50,7 +50,7 @@ people = "<br>".join(gdf[gdf['podniky'] == name]['zaměstnanci'].tolist())
 c2.markdown("**Náhodně doporučujeme**")
 c2.markdown("## "+name+"")
 c2.markdown('*'+tags+"*")
-c2.html("<div>"+note+"</div>")
+c2.html("<div>***<span>Doporučují:</span><br>"+note+"</div>")
 c2.html("<div style='font-size:80%;'>"+people+"</div>")
 
 # Create a folium map centered on Brno
@@ -60,7 +60,17 @@ marker_info = {}
 for id, row in df_filtered.iterrows():
     if row['lon'] != 0:
         # st.write(row['podniky'],row['yy'],row['xx'])
-        popup = "<div>" + row['podniky'] + "<a target='_' href='" + row['Mapa'] + "'> M </a></div>"
+
+        notes = "<p>".join(gdf[gdf['podniky'] == row['podniky']]['poznámka'].tolist())
+
+
+        popup = "<div><b>" + row['podniky'] + "</b>"
+        popup += "<p><em>"+ row['Tagy'] +"</em></p>"
+        popup += "<div>"+ notes +"</div>"
+        if 'http' in row['URL']:
+            popup += "<p><a ' href='"+row['URL']+"' title='Web podniku'>WWW</a>"
+        popup += "&nbsp;&nbsp;&nbsp;<a target='_' title='Na Mapy.cz' href='" + row['Mapa'] + "'> <img width='15' height='15' src='https://mapy.cz/img/favicon/ms-icon-144x144.png?2.65.5'> </a></p>"
+        popup += "</div>"
 
         if row['podniky'] == name:
               color = 'red'

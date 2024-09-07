@@ -1,4 +1,5 @@
 streamlit~=1.15.2
 pandas~=2.0.3
 folium~=0.17.0
+streamlit_folium~=0.18.0
 pyproj~=3.5.0

@@ -2,9 +2,9 @@ import streamlit as st
 import pandas as pd
 import folium
 from streamlit_folium import st_folium
-from pyproj import Transformer
+#from pyproj import Transformer
 
-transformer = Transformer.from_crs("EPSG:5514", "EPSG:4326", always_xy=True)
+#transformer = Transformer.from_crs("EPSG:5514", "EPSG:4326", always_xy=True)
 
 gdf = pd.read_csv("gastroWithCoords.csv").fillna("")
 

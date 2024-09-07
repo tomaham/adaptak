@@ -65,7 +65,7 @@ for id, row in df_filtered.iterrows():
         people = gdf[gdf['podniky'] == row['podniky']]['zaměstnanci'].tolist()
 
         np = zip(notes, people)
-        sequence = [x[0]+"<br>"+x[1] for x in np]
+        sequence = [x[0]+"<br><span style='font-size:80%;'>"+x[1]+"</span>" for x in np]
 
         popup = "<div><b>" + row['podniky'] + "</b>"
         popup += "<p><em>"+ row['Tagy'] +"</em></p>"

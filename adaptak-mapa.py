@@ -50,8 +50,8 @@ people = "<br>".join(gdf[gdf['podniky'] == name]['zaměstnanci'].tolist())
 c2.markdown("**Náhodně doporučujeme**")
 c2.markdown("## "+name+"")
 c2.markdown('*'+tags+"*")
-c2.html("<div>***<span>Doporučují:</span><br>"+note+"</div>")
-c2.html("<div style='font-size:80%;'>"+people+"</div>")
+c2.html("<div>"+note+"</div>")
+c2.html("<div style='font-size:80%;'><span style='font-size:80%;'>Doporučují:</span><br>"+people+"</div>")
 
 # Create a folium map centered on Brno
 m = folium.Map(location=brno_coords, zoom_start=14)

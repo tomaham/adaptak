@@ -2,9 +2,22 @@ import streamlit as st
 import pandas as pd
 import folium
 from streamlit_folium import st_folium
+import base64
+from pathlib import Path
 #from pyproj import Transformer
 
 #transformer = Transformer.from_crs("EPSG:5514", "EPSG:4326", always_xy=True)
+
+def img_to_bytes(img_path):
+    img_bytes = Path(img_path).read_bytes()
+    encoded = base64.b64encode(img_bytes).decode()
+    return encoded
+def img_to_html(img_path, width=30):
+    img_html = "<img width='"+str(width)+"' src='data:image/png;base64,{}' class='img-fluid'>".format(
+      img_to_bytes(img_path)
+    )
+    return img_html
+
 
 gdf = pd.read_csv("gastroWithCoords.csv").fillna("")
 
@@ -36,8 +49,6 @@ st.write("Kde se dá kolem najíst a napít?")
 
 # Display the folium map using the st_folium component
 
-
-
 c1, c2 = st.columns([5, 2])
 
 selected_tags = c1.multiselect("Výběrem zúžíte zobrazené", all_tags,
@@ -56,7 +67,10 @@ note = "<br> <br>".join(gdf[gdf['podniky'] == name]['poznámka'].tolist())
 people = "<br>".join(gdf[gdf['podniky'] == name]['zaměstnanci'].tolist())
 
 c2.markdown("**Náhodně doporučujeme**")
-c2.markdown("## "+name+"")
+#c2.image("285659_marker_map_icon.png", width=20)  # title="Tento podnik je v mapě zvýrazněný jako červený."
+
+c2.html("<h2 style='margin:0px;padding:0px;'> "+img_to_html('285659_marker_map_icon.png',width=20) + name + "</h2>")
+
 c2.markdown('*'+tags+"*")
 c2.html("<div>"+note+"</div>")
 c2.html("<div style='font-size:80%;'><span style='font-size:80%;'>Doporučují:</span><br>"+people+"</div>")

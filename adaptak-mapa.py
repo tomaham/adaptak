@@ -22,8 +22,14 @@ brno_coords = [49.2000, 16.6100] # center
 
 ##################################################################################
 
+if "wide" in st.query_params:
+    layout = "wide"
+else:
+    layout = "centered"
 
-st.set_page_config(page_title="Gastromapa (Reli Adapťák 2024)")  # page_icon=None, layout="centered", initial_sidebar_state="auto", menu_items=None
+st.set_page_config(page_title="Gastromapa (Reli Adapťák 2024)", layout=layout)  # page_icon=None, layout="centered", initial_sidebar_state="auto", menu_items=None
+
+st.write(layout)
 
 st.title("Adapťák Gastro Mapa")
 st.write("Kde se dá kolem najíst a napít?")

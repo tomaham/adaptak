@@ -59,70 +59,75 @@ if selected_tags:
 else:
     df_filtered = gdf
 
-rrecommend = df_filtered.sample(n=1)
 
-name = rrecommend.iloc[0]['podniky']
-tags = rrecommend.iloc[0]['Tagy']
-note = "<br> <br>".join(gdf[gdf['podniky'] == name]['poznámka'].tolist())
-people = "<br>".join(gdf[gdf['podniky'] == name]['zaměstnanci'].tolist())
+if len(df_filtered) == 0:
+    st.write("V té kombinaci tagů neumíme nic najít :( Zkuste změnit filtr.")
+else:
 
-c2.markdown("**Náhodně doporučujeme**")
-#c2.image("285659_marker_map_icon.png", width=20)  # title="Tento podnik je v mapě zvýrazněný jako červený."
+    rrecommend = df_filtered.sample(n=1)
 
-c2.html("<h2 style='margin:0px;padding:0px;'> "+img_to_html('285659_marker_map_icon.png',width=20) + name + "</h2>")
+    name = rrecommend.iloc[0]['podniky']
+    tags = rrecommend.iloc[0]['Tagy']
+    note = "<br> <br>".join(gdf[gdf['podniky'] == name]['poznámka'].tolist())
+    people = "<br>".join(gdf[gdf['podniky'] == name]['zaměstnanci'].tolist())
 
-c2.markdown('*'+tags+"*")
-c2.html("<div>"+note+"</div>")
-c2.html("<div style='font-size:80%;'><span style='font-size:80%;'>Doporučují:</span><br>"+people+"</div>")
+    c2.markdown("**Náhodně doporučujeme**")
+    #c2.image("285659_marker_map_icon.png", width=20)  # title="Tento podnik je v mapě zvýrazněný jako červený."
 
-# Create a folium map centered on Brno
-m = folium.Map(location=brno_coords, zoom_start=14)
+    c2.html("<h2 style='margin:0px;padding:0px;'> "+img_to_html('285659_marker_map_icon.png',width=20) + name + "</h2>")
 
-marker_info = {}
-for id, row in df_filtered.iterrows():
-    if row['lon'] != 0:
-        # st.write(row['podniky'],row['yy'],row['xx'])
+    c2.markdown('*'+tags+"*")
+    c2.html("<div>"+note+"</div>")
+    c2.html("<div style='font-size:80%;'><span style='font-size:80%;'>Doporučují:</span><br>"+people+"</div>")
 
-        notes = gdf[gdf['podniky'] == row['podniky']]['poznámka'].tolist()
-        people = gdf[gdf['podniky'] == row['podniky']]['zaměstnanci'].tolist()
+    # Create a folium map centered on Brno
+    m = folium.Map(location=brno_coords, zoom_start=14)
 
-        np = zip(notes, people)
-        sequence = [x[0]+"<br><span style='font-size:80%;'>"+x[1]+"</span>" for x in np]
+    marker_info = {}
+    for id, row in df_filtered.iterrows():
+        if row['lon'] != 0:
+            # st.write(row['podniky'],row['yy'],row['xx'])
 
-        popup = "<div><b>" + row['podniky'] + "</b>"
-        popup += "<p><em>"+ row['Tagy'] +"</em></p>"
-        popup += "<div>"+ "<p>".join(sequence) +"</div>"
-        #popup += "<div>"+ notes +"</div>"
-        if 'http' in row['URL']:
-            popup += "<p><a target='_' href='"+row['URL']+"' title='Web podniku'>WWW</a>"
-        popup += "&nbsp;&nbsp;&nbsp;<a target='_' title='Na Mapy.cz' href='" + row['Mapa'] + "'> <img width='15' height='15' src='https://mapy.cz/img/favicon/ms-icon-144x144.png?2.65.5'> </a></p>"
-        popup += "</div>"
+            notes = gdf[gdf['podniky'] == row['podniky']]['poznámka'].tolist()
+            people = gdf[gdf['podniky'] == row['podniky']]['zaměstnanci'].tolist()
 
-        if row['podniky'] == name:
-              color = 'red'
+            np = zip(notes, people)
+            sequence = [x[0]+"<br><span style='font-size:80%;'>"+x[1]+"</span>" for x in np]
+
+            popup = "<div><b>" + row['podniky'] + "</b>"
+            popup += "<p><em>"+ row['Tagy'] +"</em></p>"
+            popup += "<div>"+ "<p>".join(sequence) +"</div>"
+            #popup += "<div>"+ notes +"</div>"
+            if 'http' in row['URL']:
+                popup += "<p><a target='_' href='"+row['URL']+"' title='Web podniku'>WWW</a>"
+            popup += "&nbsp;&nbsp;&nbsp;<a target='_' title='Na Mapy.cz' href='" + row['Mapa'] + "'> <img width='15' height='15' src='https://mapy.cz/img/favicon/ms-icon-144x144.png?2.65.5'> </a></p>"
+            popup += "</div>"
+
+            if row['podniky'] == name:
+                  color = 'red'
+            else:
+                  color = 'blue'
+            #color='blue'
+
+            marker = folium.Marker(
+                location=[row['lat'], row['lon']],
+                popup=folium.Popup(popup,max_width=300),
+                icon=folium.Icon(color=color, icon=row['Icon'], prefix='fa'),
+                tooltip="Klikněte pro další info"
+            ).add_to(m)
+            # st.write(row['lat'],row['lon'])
+
+            marker_info[str(marker)] = popup
         else:
-              color = 'blue'
-        #color='blue'
-
-        marker = folium.Marker(
-            location=[row['lat'], row['lon']],
-            popup=folium.Popup(popup,max_width=300),
-            icon=folium.Icon(color=color, icon=row['Icon'], prefix='fa'),
-            tooltip="Klikněte pro další info"
-        ).add_to(m)
-        # st.write(row['lat'],row['lon'])
-
-        marker_info[str(marker)] = popup
-    else:
-        pass
-        # st.write(id)
-        # marker.add_to(m)
+            pass
+            # st.write(id)
+            # marker.add_to(m)
 
 
-with c1:
-    map_object = st_folium(m, width=725, returned_objects=[]) #  width=725
-#st.write("Popup:", map_object["last_object_clicked_popup"])
-#st.write("Tooltip:", map_object["last_object_clicked_tooltip"])
+    with c1:
+        map_object = st_folium(m, width=725, returned_objects=[]) #  width=725
+    #st.write("Popup:", map_object["last_object_clicked_popup"])
+    #st.write("Tooltip:", map_object["last_object_clicked_tooltip"])
 
 
 

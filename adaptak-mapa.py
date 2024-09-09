@@ -61,7 +61,7 @@ else:
 
 
 if len(df_filtered) == 0:
-    st.write("V té kombinaci tagů neumíme nic najít :( Zkuste změnit filtr.")
+    st.info("V té kombinaci tagů neumíme nic najít :( Zkuste změnit filtr.")
 else:
 
     rrecommend = df_filtered.sample(n=1)

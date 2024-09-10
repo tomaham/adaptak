@@ -19,7 +19,8 @@ def img_to_html(img_path, width=30):
     return img_html
 
 
-gdf = pd.read_csv("gastroWithCoords.csv").fillna("")
+#gdf = pd.read_csv("gastroWithCoords.csv").fillna("")
+gdf = pd.read_csv("Adaptak Gastromapa Data - podniky.csv").fillna("")
 
 gdf['tags'] = gdf['Tagy'].apply(lambda x: [tag.strip().lower() for tag in x.split(',')])
 all_tags = sorted(set([tag for sublist in gdf['tags'] for tag in sublist]))
@@ -31,7 +32,7 @@ gdf['lon'] = gdf['lon'].astype(float)
 gdf['lat'] = gdf['lat'].astype(float)
 gdf['poznámka'] = gdf['poznámka'].astype(str)
 
-brno_coords = [49.2000, 16.6100] # center
+# center
 
 ##################################################################################
 
@@ -43,7 +44,7 @@ else:
 st.set_page_config(page_title="Gastromapa (Reli Adapťák 2024)", layout=layout)  # page_icon=None, layout="centered", initial_sidebar_state="auto", menu_items=None
 
 
-st.title("Adapťák Gastro Mapa")
+st.title("Religionistická kolemfakultní Gastro Mapa")
 st.write("Kde se dá kolem najíst a napít?")
 
 
@@ -52,7 +53,7 @@ st.write("Kde se dá kolem najíst a napít?")
 c1, c2 = st.columns([5, 2])
 
 selected_tags = c1.multiselect("Výběrem zúžíte zobrazené", all_tags,
-                               help='Jestli trochu víte, co (ne) chcete ...')
+                               help='Jestli trochu víte, co (ne) chcete. Tagy se sčítají, tj. oběd + levné vybere lokality, které mají tag a levné.', default="oběd")
 
 if selected_tags:
     df_filtered = gdf[gdf['tags'].apply(lambda tags: all(tag in tags for tag in selected_tags))]
@@ -69,7 +70,7 @@ else:
     name = rrecommend.iloc[0]['podniky']
     tags = rrecommend.iloc[0]['Tagy']
     note = "<br> <br>".join(gdf[gdf['podniky'] == name]['poznámka'].tolist())
-    people = "<br>".join(gdf[gdf['podniky'] == name]['zaměstnanci'].tolist())
+    people = "<br>".join(gdf[gdf['podniky'] == name]['osoby'].tolist())
 
     c2.markdown("**Náhodně doporučujeme**")
     #c2.image("285659_marker_map_icon.png", width=20)  # title="Tento podnik je v mapě zvýrazněný jako červený."
@@ -81,7 +82,8 @@ else:
     c2.html("<div style='font-size:80%;'><span style='font-size:80%;'>Doporučují:</span><br>"+people+"</div>")
 
     # Create a folium map centered on Brno
-    m = folium.Map(location=brno_coords, zoom_start=14)
+    brno_coords = [49.2000, 16.6050]
+    m = folium.Map(location=brno_coords, zoom_start=15)
 
     marker_info = {}
     for id, row in df_filtered.iterrows():
@@ -89,7 +91,7 @@ else:
             # st.write(row['podniky'],row['yy'],row['xx'])
 
             notes = gdf[gdf['podniky'] == row['podniky']]['poznámka'].tolist()
-            people = gdf[gdf['podniky'] == row['podniky']]['zaměstnanci'].tolist()
+            people = gdf[gdf['podniky'] == row['podniky']]['osoby'].tolist()
 
             np = zip(notes, people)
             sequence = [x[0]+"<br><span style='font-size:80%;'>"+x[1]+"</span>" for x in np]

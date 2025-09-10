@@ -46,7 +46,7 @@ st.set_page_config(page_title="Gastromapa (Reli Adapťák 2024)", layout=layout)
 
 st.markdown("## Religionistická kolemfakultní Gastro Mapa")
 st.write("Kde se dá kolem najíst a napít?")
-
+st.write("(Pro detaily Menu, doporucujeme https://www.lepsimenu.cz/)")
 
 # Display the folium map using the st_folium component
 

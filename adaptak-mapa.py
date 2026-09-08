@@ -28,9 +28,10 @@ all_tags = sorted(set([tag for sublist in gdf['tags'] for tag in sublist]))
 
 #st.write(all_tags)
 
-gdf['lon'] = gdf['lon'].astype(float)
-gdf['lat'] = gdf['lat'].astype(float)
+gdf['lon'] = pd.to_numeric(gdf['lon'], errors='coerce')
+gdf['lat'] = pd.to_numeric(gdf['lat'], errors='coerce')
 gdf['poznámka'] = gdf['poznámka'].astype(str)
+gdf = gdf.dropna(subset=['lat', 'lon'])
 
 # center
 

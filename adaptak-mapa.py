@@ -102,7 +102,7 @@ else:
             #popup += "<div>"+ notes +"</div>"
             if 'http' in row['URL']:
                 popup += "<p><a target='_' href='"+row['URL']+"' title='Web podniku'>WWW</a>"
-            popup += "&nbsp;&nbsp;&nbsp;<a target='_' title='Na Mapy.cz' href='" + row['Mapa'] + "'> <img width='15' height='15' src='https://mapy.cz/img/favicon/ms-icon-144x144.png?2.65.5'> </a></p>"
+            popup += "&nbsp;&nbsp;&nbsp;<a target='_' title='Na Mapy.cz' href='" + row['Mapa'] + "'> <img width='15' height='15' src='https://mapy.com/img/favicon/common/plain/favicon-32x32.png'> </a></p>"
             popup += "</div>"
 
             if row['podniky'] == name:
